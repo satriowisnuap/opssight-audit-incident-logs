@@ -12,6 +12,10 @@ class AuditLogController extends Controller
      */
     public function index(Request $request)
     {
+        if (auth()->user()->role !== 'ADMIN') {
+            abort(403, 'Unauthorized action.');
+        }
+
         $query = DB::table('audit_logs')
             ->leftJoin('users', 'audit_logs.user_id', '=', 'users.id')
             ->select(
@@ -106,6 +110,10 @@ class AuditLogController extends Controller
      */
     public function details($id)
     {
+        if (auth()->user()->role !== 'ADMIN') {
+            abort(403, 'Unauthorized action.');
+        }
+
         $log = DB::table('audit_logs')
             ->where('id', $id)
             ->first();
@@ -253,6 +261,66 @@ class AuditLogController extends Controller
                     'name' => $newVals['name']
                         ?? $oldVals['name']
                         ?? 'Deleted Category #'.$log->record_id,
+
+                    'created_at' => $newVals['created_at']
+                        ?? $oldVals['created_at']
+                        ?? null,
+
+                    'updated_at' => $newVals['updated_at']
+                        ?? $oldVals['updated_at']
+                        ?? null,
+
+                    'is_deleted' => true,
+
+                    'action' => $log->action,
+
+                    'old_values' => $oldVals,
+
+                    'new_values' => $newVals,
+                ];
+            }
+
+            /**
+             * USER DETAILS
+             */
+        } elseif ($log->table_name === 'users') {
+
+            $data = DB::table('users')
+                ->where('id', $log->record_id)
+                ->first();
+
+            if ($data) {
+
+                $exists = true;
+
+            } else {
+
+                /**
+                 * FALLBACK FROM AUDIT LOG
+                 */
+                $newVals = $log->new_values
+                    ? json_decode($log->new_values, true)
+                    : [];
+
+                $oldVals = $log->old_values
+                    ? json_decode($log->old_values, true)
+                    : [];
+
+                $data = [
+
+                    'id' => $log->record_id,
+
+                    'name' => $newVals['name']
+                        ?? $oldVals['name']
+                        ?? 'Deleted User #'.$log->record_id,
+
+                    'email' => $newVals['email']
+                        ?? $oldVals['email']
+                        ?? 'N/A',
+
+                    'role' => $newVals['role']
+                        ?? $oldVals['role']
+                        ?? 'N/A',
 
                     'created_at' => $newVals['created_at']
                         ?? $oldVals['created_at']

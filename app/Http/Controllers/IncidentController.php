@@ -107,6 +107,10 @@ class IncidentController extends Controller
      */
     public function create()
     {
+        if (auth()->user()->role === 'OPERATOR') {
+            abort(403, 'Unauthorized action.');
+        }
+
         $categories = DB::table('incident_categories')
             ->orderBy('name')
             ->get();
@@ -129,6 +133,10 @@ class IncidentController extends Controller
      */
     public function store(Request $request)
     {
+        if (auth()->user()->role === 'OPERATOR') {
+            abort(403, 'Unauthorized action.');
+        }
+
         /**
          * VALIDATION
          */
@@ -408,6 +416,10 @@ class IncidentController extends Controller
      */
     public function destroy($id)
     {
+        if (auth()->user()->role === 'OPERATOR') {
+            abort(403, 'Unauthorized action.');
+        }
+
         /**
          * GET INCIDENT
          */

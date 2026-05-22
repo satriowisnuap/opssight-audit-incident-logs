@@ -12,6 +12,10 @@ class IncidentCategoryController extends Controller
      */
     public function index(Request $request)
     {
+        if (auth()->user()->role !== 'ADMIN') {
+            abort(403, 'Unauthorized action.');
+        }
+
         $query = DB::table('incident_categories')
             ->leftJoin(
                 'incidents',
@@ -65,6 +69,10 @@ class IncidentCategoryController extends Controller
      */
     public function create()
     {
+        if (auth()->user()->role !== 'ADMIN') {
+            abort(403, 'Unauthorized action.');
+        }
+
         return view('pages.opssight.categories.create');
     }
 
@@ -73,6 +81,10 @@ class IncidentCategoryController extends Controller
      */
     public function store(Request $request)
     {
+        if (auth()->user()->role !== 'ADMIN') {
+            abort(403, 'Unauthorized action.');
+        }
+
         /**
          * VALIDATION
          */
@@ -115,6 +127,10 @@ class IncidentCategoryController extends Controller
      */
     public function edit($id)
     {
+        if (auth()->user()->role !== 'ADMIN') {
+            abort(403, 'Unauthorized action.');
+        }
+
         $category = DB::table('incident_categories')
             ->where('id', $id)
             ->first();
@@ -134,6 +150,10 @@ class IncidentCategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (auth()->user()->role !== 'ADMIN') {
+            abort(403, 'Unauthorized action.');
+        }
+
         $category = DB::table('incident_categories')
             ->where('id', $id)
             ->first();
@@ -197,6 +217,10 @@ class IncidentCategoryController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+        if (auth()->user()->role !== 'ADMIN') {
+            abort(403, 'Unauthorized action.');
+        }
+
         $category = DB::table('incident_categories')
             ->where('id', $id)
             ->first();

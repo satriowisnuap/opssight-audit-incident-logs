@@ -59,43 +59,48 @@
     @mouseleave="$store.sidebar.setHovered(false)">
 
     <!-- Logo Section -->
-    <div
-        class="flex pb-7 pt-8"
-        :class="(!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ?
-        'xl:justify-center' :
-        'justify-start'">
+    <!-- Logo Section -->
+    <a href="{{ route('dashboard') }}"
+        class="mb-4 flex items-center gap-3 border-b border-gray-100 py-5">
 
-        <a href="{{ route('dashboard') }}" class="flex items-center">
+        <!-- Logo Icon -->
+        <div
+            class="bg-brand-500 relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl text-white shadow-md">
+            <!-- Subtle shine overlay -->
+            <div class="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 to-transparent">
+            </div>
 
-            <!-- Full Logo -->
-            <img
-                x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
-                src="{{ asset('images/logo/logo.svg') }}"
-                alt="Logo"
-                width="150"
-                height="40"
-                class="dark:hidden" />
+            <svg xmlns="http://www.w3.org/2000/svg"
+                class="relative z-10 h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z" />
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9.5 12.5l1.5 1.5 3.5-3.5" />
+            </svg>
+        </div>
 
-            <!-- Dark Logo -->
-            <img
-                x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
-                src="{{ asset('images/logo/logo-dark.svg') }}"
-                alt="Logo Dark"
-                width="150"
-                height="40"
-                class="hidden dark:block" />
+        <!-- Text -->
+        <div
+            x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 -translate-x-2"
+            x-transition:enter-end="opacity-100 translate-x-0"
+            class="flex min-w-0 flex-col justify-center leading-tight">
 
-            <!-- Small Icon -->
-            <img
-                x-show="!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen"
-                src="{{ asset('images/logo/logo-icon.svg') }}"
-                alt="Logo Icon"
-                width="32"
-                height="32" />
+            <h1 class="truncate text-sm font-bold tracking-tight text-gray-800 dark:text-white">
+                OpsSight
+            </h1>
 
-        </a>
+            <p class="truncate text-[11px] font-medium text-gray-400 dark:text-gray-500">
+                Audit & Incident Logs
+            </p>
+        </div>
+    </a>
 
-    </div>
 
     <!-- Navigation Menu -->
     <div class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
@@ -279,13 +284,6 @@
                 @endforeach
             </div>
         </nav>
-
-        <!-- Sidebar Widget -->
-        <div x-data x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
-            x-transition class="mt-auto">
-            @include('layouts.sidebar-widget')
-        </div>
-
     </div>
 </aside>
 

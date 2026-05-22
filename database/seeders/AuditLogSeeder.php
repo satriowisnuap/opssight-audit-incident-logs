@@ -14,7 +14,6 @@ class AuditLogSeeder extends Seeder
             /**
              * INCIDENT LOGS
              */
-
             [
                 'user_id' => 1,
                 'action' => 'CREATE_INCIDENT',
@@ -132,7 +131,6 @@ class AuditLogSeeder extends Seeder
             /**
              * CATEGORY LOGS
              */
-
             [
                 'user_id' => 1,
                 'action' => 'CREATE_CATEGORY',
@@ -172,7 +170,6 @@ class AuditLogSeeder extends Seeder
             /**
              * USER LOGS
              */
-
             [
                 'user_id' => 1,
                 'action' => 'CREATE_USER',

@@ -254,6 +254,8 @@ class UserManagementController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role,
+                'created_at' => $user->created_at,
+                'updated_at' => $user->updated_at,
             ]),
             'new_values' => null,
             'ip_address' => $request->ip(),

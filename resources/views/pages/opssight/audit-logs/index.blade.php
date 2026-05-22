@@ -231,6 +231,18 @@
                                             'DELETE_CATEGORY' => 'Deleted category "' .
                                                 ($oldVals['name'] ?? '—') .
                                                 '".',
+                                            'CREATE_USER' => 'Created new user "' .
+                                                ($newVals['name'] ?? '—') .
+                                                '" (' . ($newVals['email'] ?? '—') . ') with role ' . ($newVals['role'] ?? '—') . '.',
+                                            'UPDATE_USER' => 'Updated user "' .
+                                                ($newVals['name'] ?? $oldVals['name'] ?? '—') .
+                                                '" (ID #' . $log->record_id . ').',
+                                            'DELETE_USER' => 'Deleted user "' .
+                                                ($oldVals['name'] ?? '—') .
+                                                '" (' . ($oldVals['email'] ?? '—') . ').',
+                                            'CHANGE_ROLE' => 'Changed role of user #' . $log->record_id .
+                                                ' from ' . ($oldVals['role'] ?? '—') .
+                                                ' to ' . ($newVals['role'] ?? '—') . '.',
                                             default => isset($newVals['message'])
                                                 ? $newVals['message']
                                                 : str_replace('_', ' ', $log->action),
@@ -292,6 +304,7 @@
                                                 $targetUrl = match ($log->table_name) {
                                                     'incidents' => route('incidents.show', $log->record_id),
                                                     'incident_categories' => route('categories.edit', $log->record_id),
+                                                    'users' => route('users.show', $log->record_id),
                                                     default => null,
                                                 };
                                             @endphp
@@ -422,10 +435,18 @@
                                             d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                     </svg>
                                 </template>
+                                <!-- User icon -->
+                                <template x-if="tableName === 'users'">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                </template>
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-800 dark:text-white"
-                                    x-text="tableName === 'incidents' ? 'Incident Details' : 'Category Details'"></h3>
+                                    x-text="tableName === 'incidents' ? 'Incident Details' : (tableName === 'incident_categories' ? 'Category Details' : 'User Details')"></h3>
                                 <p class="text-xs text-gray-500 dark:text-gray-400">
                                     <span class="capitalize" x-text="tableName.replace('_', ' ')"></span> Record ID:
                                     #<span x-text="recordId"></span>
@@ -595,6 +616,79 @@
                                         class="rounded-xl border border-gray-100 bg-gray-50/20 p-4 dark:border-gray-800 dark:bg-gray-800/10">
                                         <span class="text-xs font-medium text-gray-400 dark:text-gray-500">Last Updated
                                             At</span>
+                                        <p class="mt-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
+                                            x-text="details.updated_at ? new Date(details.updated_at).toLocaleString() : 'N/A'">
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- USER DISPLAY -->
+                        <template x-if="tableName === 'users' && details">
+                            <div class="flex flex-col gap-6">
+
+                                <!-- Avatar + Name -->
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="bg-brand-100 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-xl font-bold">
+                                        <span x-text="details.name ? details.name.charAt(0).toUpperCase() : '?'"></span>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-base font-bold text-gray-800 dark:text-white"
+                                            x-text="details.name || 'Unknown User'"></h4>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400"
+                                            x-text="details.email || '—'"></p>
+                                    </div>
+                                </div>
+
+                                <!-- Role Badge -->
+                                <div>
+                                    <span
+                                        class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Role</span>
+                                    <div class="mt-2">
+                                        <span
+                                            class="inline-flex rounded-full px-3 py-1 text-xs font-semibold tracking-wide"
+                                            :class="{
+                                                'bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400': details.role === 'ADMIN',
+                                                'bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400': details.role === 'OPERATOR',
+                                                'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400': !['ADMIN','OPERATOR'].includes(details.role)
+                                            }"
+                                            x-text="details.role || 'N/A'"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Meta Grid -->
+                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                    <div
+                                        class="rounded-xl border border-gray-100 bg-gray-50/20 p-4 dark:border-gray-800 dark:bg-gray-800/10">
+                                        <span
+                                            class="text-xs font-medium text-gray-400 dark:text-gray-500">Email</span>
+                                        <p class="mt-2 text-sm font-semibold text-gray-700 dark:text-gray-300 break-all"
+                                            x-text="details.email || '—'"></p>
+                                    </div>
+
+                                    <div
+                                        class="rounded-xl border border-gray-100 bg-gray-50/20 p-4 dark:border-gray-800 dark:bg-gray-800/10">
+                                        <span class="text-xs font-medium text-gray-400 dark:text-gray-500">User
+                                            ID</span>
+                                        <p class="mt-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
+                                            x-text="'#' + (details.id || recordId)"></p>
+                                    </div>
+
+                                    <div
+                                        class="rounded-xl border border-gray-100 bg-gray-50/20 p-4 dark:border-gray-800 dark:bg-gray-800/10">
+                                        <span class="text-xs font-medium text-gray-400 dark:text-gray-500">Created
+                                            At</span>
+                                        <p class="mt-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
+                                            x-text="details.created_at ? new Date(details.created_at).toLocaleString() : 'N/A'">
+                                        </p>
+                                    </div>
+
+                                    <div
+                                        class="rounded-xl border border-gray-100 bg-gray-50/20 p-4 dark:border-gray-800 dark:bg-gray-800/10">
+                                        <span class="text-xs font-medium text-gray-400 dark:text-gray-500">Last
+                                            Updated</span>
                                         <p class="mt-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
                                             x-text="details.updated_at ? new Date(details.updated_at).toLocaleString() : 'N/A'">
                                         </p>

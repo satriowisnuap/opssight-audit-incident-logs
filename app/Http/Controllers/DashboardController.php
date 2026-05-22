@@ -9,8 +9,19 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        $baseIncidentQuery = function () {
+            $q = DB::table('incidents');
+            if (auth()->check() && auth()->user()->role === 'OPERATOR') {
+                $q->where(function ($sub) {
+                    $sub->where('assigned_to', auth()->id())
+                        ->orWhere('reported_by', auth()->id());
+                });
+            }
+            return $q;
+        };
+
         // Base incident query for filtering
-        $incidentQuery = DB::table('incidents');
+        $incidentQuery = $baseIncidentQuery();
 
         if ($request->filled('severity')) {
             $incidentQuery->where('severity', $request->severity);
@@ -35,7 +46,7 @@ class DashboardController extends Controller
         $resolvedIncidents = (clone $incidentQuery)->where('status', 'RESOLVED')->count();
 
         // 2. CRITICAL INCIDENT PANEL
-        $criticalPanelIncidents = DB::table('incidents')
+        $criticalPanelIncidents = $baseIncidentQuery()
             ->leftJoin('users', 'incidents.assigned_to', '=', 'users.id')
             ->where('severity', 'CRITICAL')
             ->where('status', '!=', 'RESOLVED')
@@ -57,21 +68,27 @@ class DashboardController extends Controller
             ->paginate(10);
 
         // 4. INCIDENT STATUS SUMMARY CHART
-        $statusChart = DB::table('incidents')
+        $statusChart = $baseIncidentQuery()
             ->select('status', DB::raw('count(*) as total'))
             ->groupBy('status')
             ->pluck('total', 'status');
 
         // 5. SEVERITY DISTRIBUTION CHART
-        $severityChart = DB::table('incidents')
+        $severityChart = $baseIncidentQuery()
             ->select('severity', DB::raw('count(*) as total'))
             ->groupBy('severity')
             ->pluck('total', 'severity');
 
         // 6. RECENT AUDIT LOGS
-        $recentAuditLogs = DB::table('audit_logs')
+        $auditLogsQuery = DB::table('audit_logs')
             ->leftJoin('users', 'audit_logs.user_id', '=', 'users.id')
-            ->select('audit_logs.*', 'users.name as user_name')
+            ->select('audit_logs.*', 'users.name as user_name');
+
+        if (auth()->check() && auth()->user()->role === 'OPERATOR') {
+            $auditLogsQuery->where('audit_logs.user_id', auth()->id());
+        }
+
+        $recentAuditLogs = $auditLogsQuery
             ->orderBy('audit_logs.created_at', 'desc')
             ->limit(10)
             ->get();

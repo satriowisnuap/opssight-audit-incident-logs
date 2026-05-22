@@ -6,7 +6,7 @@ class MenuHelper
 {
     public static function getMainNavItems()
     {
-        return [
+        $items = [
             [
                 'icon' => 'dashboard',
                 'name' => 'Dashboard',
@@ -26,22 +26,27 @@ class MenuHelper
                     ],
                 ],
             ],
-            [
+        ];
+
+        if (auth()->check() && auth()->user()->role === 'ADMIN') {
+            $items[] = [
                 'icon' => 'tables',
                 'name' => 'Categories',
                 'path' => '/categories',
-            ],
-            [
+            ];
+            $items[] = [
                 'icon' => 'charts',
                 'name' => 'Audit Logs',
                 'path' => '/audit-logs',
-            ],
-            [
+            ];
+            $items[] = [
                 'icon' => 'user-profile',
                 'name' => 'Users Management',
                 'path' => '/users',
-            ],
-        ];
+            ];
+        }
+
+        return $items;
     }
 
     public static function getOthersItems()

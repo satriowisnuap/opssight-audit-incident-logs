@@ -96,7 +96,8 @@
                             </div>
                         </div>
 
-                        {{-- Assigned Operator --}}
+                        {{-- Assigned Operator (ADMIN ONLY) --}}
+                        @if(auth()->check() && auth()->user()->role === 'ADMIN')
                         <div>
                             <label class="mb-2.5 block text-sm font-medium text-gray-800 dark:text-white/90">
                                 Assigned Operator
@@ -135,6 +136,7 @@
                                 </p>
                             @enderror
                         </div>
+                        @endif
 
                         {{-- Notes / Audit Log --}}
                         <div>

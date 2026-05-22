@@ -32,6 +32,16 @@ class IncidentController extends Controller
             );
 
         /**
+         * OPERATOR FILTER
+         */
+        if (auth()->check() && auth()->user()->role === 'OPERATOR') {
+            $query->where(function ($q) {
+                $q->where('incidents.assigned_to', auth()->id())
+                  ->orWhere('incidents.reported_by', auth()->id());
+            });
+        }
+
+        /**
          * SEARCH FILTER
          */
         if ($request->search) {
@@ -107,9 +117,6 @@ class IncidentController extends Controller
      */
     public function create()
     {
-        if (auth()->user()->role === 'OPERATOR') {
-            abort(403, 'Unauthorized action.');
-        }
 
         $categories = DB::table('incident_categories')
             ->orderBy('name')
@@ -133,9 +140,6 @@ class IncidentController extends Controller
      */
     public function store(Request $request)
     {
-        if (auth()->user()->role === 'OPERATOR') {
-            abort(403, 'Unauthorized action.');
-        }
 
         /**
          * VALIDATION
@@ -144,10 +148,15 @@ class IncidentController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required',
             'severity' => 'required',
-            'status' => 'required',
             'category_id' => 'required',
             'incident_date' => 'required',
         ]);
+
+        /**
+         * ROLE BASED LOGIC
+         */
+        $assignedTo = auth()->user()->role === 'OPERATOR' ? null : $request->assigned_to;
+        $status = 'OPEN';
 
         /**
          * INSERT INCIDENT
@@ -156,9 +165,9 @@ class IncidentController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'severity' => $request->severity,
-            'status' => $request->status,
+            'status' => $status,
             'category_id' => $request->category_id,
-            'assigned_to' => $request->assigned_to,
+            'assigned_to' => $assignedTo,
             'reported_by' => auth()->id(),
             'incident_date' => $request->incident_date,
             'created_at' => now(),
@@ -178,9 +187,9 @@ class IncidentController extends Controller
                 'title' => $request->title,
                 'description' => $request->description,
                 'severity' => $request->severity,
-                'status' => $request->status,
+                'status' => $status,
                 'category_id' => $request->category_id,
-                'assigned_to' => $request->assigned_to,
+                'assigned_to' => $assignedTo,
                 'incident_date' => $request->incident_date,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -241,6 +250,12 @@ class IncidentController extends Controller
             abort(404);
         }
 
+        if (auth()->check() && auth()->user()->role === 'OPERATOR') {
+            if ($incident->assigned_to !== auth()->id() && $incident->reported_by !== auth()->id()) {
+                abort(403, 'Unauthorized action.');
+            }
+        }
+
         /**
          * AUDIT LOGS
          */
@@ -280,6 +295,12 @@ class IncidentController extends Controller
 
         if (! $incident) {
             abort(404);
+        }
+
+        if (auth()->check() && auth()->user()->role === 'OPERATOR') {
+            if ($incident->assigned_to !== auth()->id() && $incident->reported_by !== auth()->id()) {
+                abort(403, 'Unauthorized action.');
+            }
         }
 
         $categories = DB::table('incident_categories')
@@ -323,6 +344,12 @@ class IncidentController extends Controller
             abort(404);
         }
 
+        if (auth()->check() && auth()->user()->role === 'OPERATOR') {
+            if ($incident->assigned_to !== auth()->id() && $incident->reported_by !== auth()->id()) {
+                abort(403, 'Unauthorized action.');
+            }
+        }
+
         /**
          * OLD VALUES
          */
@@ -332,13 +359,15 @@ class IncidentController extends Controller
             'assigned_to' => $incident->assigned_to,
         ];
 
+        $newAssignedTo = auth()->user()->role === 'OPERATOR' ? $incident->assigned_to : $request->assigned_to;
+
         /**
          * NEW VALUES
          */
         $newValues = [
             'status' => $request->status,
             'severity' => $request->severity,
-            'assigned_to' => $request->assigned_to,
+            'assigned_to' => $newAssignedTo,
         ];
 
         /**

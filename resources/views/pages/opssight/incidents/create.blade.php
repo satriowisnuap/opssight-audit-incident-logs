@@ -106,7 +106,8 @@
                             @enderror
                         </div>
 
-                        {{-- Assigned Operator --}}
+                        {{-- Assigned Operator (ADMIN ONLY) --}}
+                        @if(auth()->check() && auth()->user()->role === 'ADMIN')
                         <div>
                             <label class="mb-2.5 block text-sm font-medium text-gray-800 dark:text-white/90">
                                 Assigned Operator
@@ -132,34 +133,9 @@
                                 <p class="text-error-500 mt-1 text-xs">{{ $message }}</p>
                             @enderror
                         </div>
+                        @endif
 
-                        {{-- Status --}}
-                        <div>
-                            <label class="mb-2.5 block text-sm font-medium text-gray-800 dark:text-white/90">
-                                Status
-                                <span class="text-error-500">*</span>
-                            </label>
-                            <div class="relative">
-                                <select name="status" required
-                                    class="focus:border-brand-500 focus:ring-brand-500/20 dark:focus:border-brand-500 w-full appearance-none rounded-lg border border-gray-300 bg-transparent py-3 pl-4 pr-10 text-sm outline-none transition focus:ring-4 dark:border-gray-700 dark:bg-gray-900 dark:text-white">
-                                    <option value="OPEN" {{ old('status') == 'OPEN' ? 'selected' : '' }}>OPEN</option>
-                                    <option value="IN_PROGRESS" {{ old('status') == 'IN_PROGRESS' ? 'selected' : '' }}>IN
-                                        PROGRESS</option>
-                                    <option value="RESOLVED" {{ old('status') == 'RESOLVED' ? 'selected' : '' }}>RESOLVED
-                                    </option>
-                                    <option value="CLOSED" {{ old('status') == 'CLOSED' ? 'selected' : '' }}>CLOSED
-                                    </option>
-                                </select>
-                                <svg class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 fill-gray-500"
-                                    viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                                </svg>
-                            </div>
-                            @error('status')
-                                <p class="text-error-500 mt-1 text-xs">{{ $message }}</p>
-                            @enderror
-                        </div>
+
 
                         {{-- Incident Date --}}
                         <div>

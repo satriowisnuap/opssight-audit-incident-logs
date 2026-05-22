@@ -37,7 +37,7 @@ class IncidentController extends Controller
         if (auth()->check() && auth()->user()->role === 'OPERATOR') {
             $query->where(function ($q) {
                 $q->where('incidents.assigned_to', auth()->id())
-                  ->orWhere('incidents.reported_by', auth()->id());
+                    ->orWhere('incidents.reported_by', auth()->id());
             });
         }
 

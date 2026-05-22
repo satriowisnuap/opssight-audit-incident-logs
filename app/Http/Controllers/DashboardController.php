@@ -17,6 +17,7 @@ class DashboardController extends Controller
                         ->orWhere('reported_by', auth()->id());
                 });
             }
+
             return $q;
         };
 

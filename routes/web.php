@@ -87,8 +87,23 @@ Route::middleware(['auth'])->group(function () {
      * |--------------------------------------------------------------------------
      */
 
-    Route::view('/categories', 'pages.opssight.dashboard')
+    Route::get('/categories', [IncidentCategoryController::class, 'index'])
         ->name('categories.index');
+
+    Route::get('/categories/create', [IncidentCategoryController::class, 'create'])
+        ->name('categories.create');
+
+    Route::post('/categories', [IncidentCategoryController::class, 'store'])
+        ->name('categories.store');
+
+    Route::get('/categories/{id}/edit', [IncidentCategoryController::class, 'edit'])
+        ->name('categories.edit');
+
+    Route::put('/categories/{id}', [IncidentCategoryController::class, 'update'])
+        ->name('categories.update');
+
+    Route::delete('/categories/{id}', [IncidentCategoryController::class, 'destroy'])
+        ->name('categories.destroy');
 
     /*
      * |--------------------------------------------------------------------------

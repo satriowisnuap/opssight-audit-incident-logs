@@ -13,35 +13,143 @@
                 <form method="GET" action="{{ route('opssight.dashboard') }}"
                     class="shadow-theme-xs flex flex-wrap items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3 dark:border-gray-800 dark:bg-white/[0.03]">
 
-                    <select name="severity"
-                        class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 focus:ring-3 rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 outline-none transition dark:border-gray-700 dark:text-gray-400">
-                        <option value="">All Severities</option>
-                        <option value="CRITICAL" {{ request('severity') == 'CRITICAL' ? 'selected' : '' }}>CRITICAL</option>
-                        <option value="HIGH" {{ request('severity') == 'HIGH' ? 'selected' : '' }}>HIGH</option>
-                        <option value="MEDIUM" {{ request('severity') == 'MEDIUM' ? 'selected' : '' }}>MEDIUM</option>
-                        <option value="LOW" {{ request('severity') == 'LOW' ? 'selected' : '' }}>LOW</option>
-                    </select>
+                    {{-- Custom Dropdown: Severity --}}
+                    <div class="custom-dropdown relative" data-name="severity">
+                        <input type="hidden" name="severity" value="{{ request('severity') }}">
+                        <button type="button"
+                            class="dropdown-trigger shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 focus:ring-3 flex min-w-[150px] items-center justify-between gap-2 rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 outline-none transition dark:border-gray-700 dark:text-gray-400">
+                            <span class="dropdown-label">
+                                @if (request('severity'))
+                                    {{ request('severity') }}
+                                @else
+                                    All Severities
+                                @endif
+                            </span>
+                            <svg class="dropdown-chevron h-4 w-4 shrink-0 fill-gray-400 transition-transform duration-200"
+                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div
+                            class="dropdown-menu absolute left-0 top-full z-50 mt-1.5 hidden w-full min-w-[160px] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
+                            <div class="p-1">
+                                <div class="dropdown-item flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-white/[0.05]"
+                                    data-value="">
+                                    <span class="h-2 w-2 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                                    All Severities
+                                </div>
+                                <div class="dropdown-item flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition hover:bg-red-50 dark:hover:bg-red-500/10"
+                                    data-value="CRITICAL">
+                                    <span class="bg-error-500 h-2 w-2 rounded-full"></span>
+                                    <span class="text-error-600 dark:text-error-400 font-medium">CRITICAL</span>
+                                </div>
+                                <div class="dropdown-item flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition hover:bg-orange-50 dark:hover:bg-orange-500/10"
+                                    data-value="HIGH">
+                                    <span class="h-2 w-2 rounded-full bg-orange-500"></span>
+                                    <span class="font-medium text-orange-600 dark:text-orange-400">HIGH</span>
+                                </div>
+                                <div class="dropdown-item flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition hover:bg-yellow-50 dark:hover:bg-yellow-500/10"
+                                    data-value="MEDIUM">
+                                    <span class="bg-warning-500 h-2 w-2 rounded-full"></span>
+                                    <span class="text-warning-600 dark:text-warning-400 font-medium">MEDIUM</span>
+                                </div>
+                                <div class="dropdown-item flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition hover:bg-green-50 dark:hover:bg-green-500/10"
+                                    data-value="LOW">
+                                    <span class="bg-success-500 h-2 w-2 rounded-full"></span>
+                                    <span class="text-success-600 dark:text-success-400 font-medium">LOW</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    <select name="status"
-                        class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 focus:ring-3 rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 outline-none transition dark:border-gray-700 dark:text-gray-400">
-                        <option value="">All Statuses</option>
-                        <option value="OPEN" {{ request('status') == 'OPEN' ? 'selected' : '' }}>OPEN</option>
-                        <option value="IN_PROGRESS" {{ request('status') == 'IN_PROGRESS' ? 'selected' : '' }}>IN PROGRESS
-                        </option>
-                        <option value="RESOLVED" {{ request('status') == 'RESOLVED' ? 'selected' : '' }}>RESOLVED</option>
-                        <option value="CLOSED" {{ request('status') == 'CLOSED' ? 'selected' : '' }}>CLOSED</option>
-                    </select>
+                    {{-- Custom Dropdown: Status --}}
+                    <div class="custom-dropdown relative" data-name="status">
+                        <input type="hidden" name="status" value="{{ request('status') }}">
+                        <button type="button"
+                            class="dropdown-trigger shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 focus:ring-3 flex min-w-[150px] items-center justify-between gap-2 rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 outline-none transition dark:border-gray-700 dark:text-gray-400">
+                            <span class="dropdown-label">
+                                @if (request('status'))
+                                    {{ str_replace('_', ' ', request('status')) }}
+                                @else
+                                    All Statuses
+                                @endif
+                            </span>
+                            <svg class="dropdown-chevron h-4 w-4 shrink-0 fill-gray-400 transition-transform duration-200"
+                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div
+                            class="dropdown-menu absolute left-0 top-full z-50 mt-1.5 hidden w-full min-w-[160px] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
+                            <div class="p-1">
+                                <div class="dropdown-item flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-white/[0.05]"
+                                    data-value="">
+                                    <span class="h-2 w-2 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                                    All Statuses
+                                </div>
+                                <div class="dropdown-item dark:hover:bg-brand-500/10 flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition hover:bg-blue-50"
+                                    data-value="OPEN">
+                                    <span class="bg-brand-500 h-2 w-2 rounded-full"></span>
+                                    <span class="text-brand-600 dark:text-brand-400 font-medium">OPEN</span>
+                                </div>
+                                <div class="dropdown-item dark:hover:bg-warning-500/10 flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition hover:bg-yellow-50"
+                                    data-value="IN_PROGRESS">
+                                    <span class="bg-warning-500 h-2 w-2 rounded-full"></span>
+                                    <span class="text-warning-600 dark:text-warning-400 font-medium">IN PROGRESS</span>
+                                </div>
+                                <div class="dropdown-item dark:hover:bg-success-500/10 flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition hover:bg-green-50"
+                                    data-value="RESOLVED">
+                                    <span class="bg-success-500 h-2 w-2 rounded-full"></span>
+                                    <span class="text-success-600 dark:text-success-400 font-medium">RESOLVED</span>
+                                </div>
+                                <div class="dropdown-item flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition hover:bg-gray-50 dark:hover:bg-white/[0.05]"
+                                    data-value="CLOSED">
+                                    <span class="h-2 w-2 rounded-full bg-gray-400"></span>
+                                    <span class="font-medium text-gray-600 dark:text-gray-400">CLOSED</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    <select name="category"
-                        class="shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 focus:ring-3 rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 outline-none transition dark:border-gray-700 dark:text-gray-400">
-                        <option value="">All Categories</option>
-                        @foreach ($categories as $cat)
-                            <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
-                                {{ $cat->name }}
-                            </option>
-                        @endforeach
-                    </select>
+                    {{-- Custom Dropdown: Category --}}
+                    <div class="custom-dropdown relative" data-name="category">
+                        <input type="hidden" name="category" value="{{ request('category') }}">
+                        <button type="button"
+                            class="dropdown-trigger shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 focus:ring-3 flex min-w-[160px] items-center justify-between gap-2 rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-700 outline-none transition dark:border-gray-700 dark:text-gray-400">
+                            <span class="dropdown-label">
+                                @php
+                                    $selectedCat = $categories->firstWhere('id', request('category'));
+                                @endphp
+                                {{ $selectedCat ? $selectedCat->name : 'All Categories' }}
+                            </span>
+                            <svg class="dropdown-chevron h-4 w-4 shrink-0 fill-gray-400 transition-transform duration-200"
+                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div
+                            class="dropdown-menu absolute left-0 top-full z-50 mt-1.5 hidden w-full min-w-[180px] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
+                            <div class="max-h-52 overflow-y-auto p-1">
+                                <div class="dropdown-item flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-white/[0.05]"
+                                    data-value="">
+                                    <span class="h-2 w-2 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                                    All Categories
+                                </div>
+                                @foreach ($categories as $cat)
+                                    <div class="dropdown-item flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-white/[0.05]"
+                                        data-value="{{ $cat->id }}" data-label="{{ $cat->name }}">
+                                        <span class="bg-brand-400 h-2 w-2 rounded-full"></span>
+                                        {{ $cat->name }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
 
+                    {{-- Search Input --}}
                     <div class="relative">
                         <input type="text" name="search" value="{{ request('search') }}"
                             placeholder="Search incidents..."
@@ -54,6 +162,7 @@
                         </svg>
                     </div>
 
+                    {{-- Filter Button --}}
                     <button type="submit"
                         class="bg-brand-500 shadow-theme-xs hover:bg-brand-600 inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-white transition">
                         Filter
@@ -61,6 +170,89 @@
                 </form>
             </div>
         </div>
+
+        {{-- Custom Dropdown Script --}}
+        @push('scripts')
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const dropdowns = document.querySelectorAll('.custom-dropdown');
+
+                    dropdowns.forEach(function(dropdown) {
+                        const trigger = dropdown.querySelector('.dropdown-trigger');
+                        const menu = dropdown.querySelector('.dropdown-menu');
+                        const label = dropdown.querySelector('.dropdown-label');
+                        const hiddenInput = dropdown.querySelector('input[type="hidden"]');
+                        const chevron = dropdown.querySelector('.dropdown-chevron');
+                        const items = dropdown.querySelectorAll('.dropdown-item');
+
+                        // Toggle dropdown
+                        trigger.addEventListener('click', function(e) {
+                            e.stopPropagation();
+
+                            // Close all other dropdowns first
+                            dropdowns.forEach(function(other) {
+                                if (other !== dropdown) {
+                                    other.querySelector('.dropdown-menu').classList.add('hidden');
+                                    other.querySelector('.dropdown-chevron').classList.remove(
+                                        'rotate-180');
+                                }
+                            });
+
+                            menu.classList.toggle('hidden');
+                            chevron.classList.toggle('rotate-180');
+                        });
+
+                        // Select item
+                        items.forEach(function(item) {
+                            item.addEventListener('click', function() {
+                                const value = item.dataset.value;
+                                const itemLabel = item.dataset.label || item.textContent.trim();
+
+                                hiddenInput.value = value;
+                                label.textContent = itemLabel;
+
+                                // Highlight active item
+                                items.forEach(i => i.classList.remove('bg-gray-100',
+                                    'dark:bg-white/[0.08]', 'font-semibold'));
+                                item.classList.add('bg-gray-100', 'dark:bg-white/[0.08]');
+
+                                menu.classList.add('hidden');
+                                chevron.classList.remove('rotate-180');
+                            });
+                        });
+                    });
+
+                    // Close on outside click
+                    document.addEventListener('click', function() {
+                        dropdowns.forEach(function(dropdown) {
+                            dropdown.querySelector('.dropdown-menu').classList.add('hidden');
+                            dropdown.querySelector('.dropdown-chevron').classList.remove('rotate-180');
+                        });
+                    });
+
+                    // Prevent menu click from closing
+                    document.querySelectorAll('.dropdown-menu').forEach(function(menu) {
+                        menu.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                        });
+                    });
+
+                    // Highlight currently selected items on load
+                    dropdowns.forEach(function(dropdown) {
+                        const hiddenInput = dropdown.querySelector('input[type="hidden"]');
+                        const currentValue = hiddenInput.value;
+                        if (currentValue) {
+                            const items = dropdown.querySelectorAll('.dropdown-item');
+                            items.forEach(function(item) {
+                                if (item.dataset.value === currentValue) {
+                                    item.classList.add('bg-gray-100', 'dark:bg-white/[0.08]');
+                                }
+                            });
+                        }
+                    });
+                });
+            </script>
+        @endpush
 
         {{-- ─── SUMMARY METRIC CARDS ────────────────────────────────────── --}}
         <div class="col-span-12 grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 xl:grid-cols-4">
@@ -497,7 +689,7 @@
                 CLOSED: {{ $statusChart['CLOSED'] ?? 0 }}
             };
 
-            new ApexCharts(document.getElementById('statusChart'), {
+            const statusChartOptions = {
                 series: [{
                     name: 'Incidents',
                     data: [
@@ -507,25 +699,20 @@
                         statusData.CLOSED
                     ]
                 }],
-
                 chart: {
                     type: 'bar',
                     height: 320,
                     width: '100%',
-
                     toolbar: {
                         show: false
                     },
-
                     fontFamily: 'Satoshi, sans-serif',
-
                     background: 'transparent',
-
-                    parentHeightOffset: 0
+                    parentHeightOffset: 0,
+                    redrawOnParentResize: true,
+                    redrawOnWindowResize: true,
                 },
-
                 colors: ['#465FFF', '#F59E0B', '#12B76A', '#98A2B3'],
-
                 plotOptions: {
                     bar: {
                         horizontal: false,
@@ -534,12 +721,9 @@
                         distributed: true
                     }
                 },
-
                 dataLabels: {
                     enabled: true,
-
                     offsetY: -8,
-
                     style: {
                         fontSize: '12px',
                         fontFamily: 'Satoshi, sans-serif',
@@ -547,11 +731,9 @@
                         colors: ['#465FFF', '#F59E0B', '#12B76A', '#98A2B3']
                     }
                 },
-
                 legend: {
                     show: false
                 },
-
                 grid: {
                     borderColor: '#F2F4F7',
                     strokeDashArray: 4,
@@ -562,13 +744,10 @@
                         left: 0
                     }
                 },
-
                 xaxis: {
                     categories: ['OPEN', 'IN PROGRESS', 'RESOLVED', 'CLOSED'],
-
                     labels: {
                         rotate: 0,
-
                         style: {
                             colors: ['#465FFF', '#F59E0B', '#12B76A', '#98A2B3'],
                             fontSize: '12px',
@@ -576,21 +755,16 @@
                             fontWeight: '600'
                         }
                     },
-
                     axisBorder: {
                         show: false
                     },
-
                     axisTicks: {
                         show: false
                     }
                 },
-
                 yaxis: {
                     min: 0,
-
                     forceNiceScale: true,
-
                     labels: {
                         style: {
                             colors: '#98A2B3',
@@ -598,20 +772,17 @@
                         }
                     }
                 },
-
                 responsive: [{
                     breakpoint: 768,
                     options: {
                         chart: {
                             height: 280
                         },
-
                         plotOptions: {
                             bar: {
                                 columnWidth: '40%'
                             }
                         },
-
                         xaxis: {
                             labels: {
                                 style: {
@@ -621,7 +792,15 @@
                         }
                     }
                 }]
-            }).render();
+            };
+
+            const statusChart = new ApexCharts(document.getElementById('statusChart'), statusChartOptions);
+            statusChart.render().then(function() {
+                setTimeout(function() {
+                    window.dispatchEvent(new Event('resize'));
+                }, 100);
+            });
+
         });
     </script>
 @endpush

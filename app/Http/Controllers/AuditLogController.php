@@ -106,19 +106,43 @@ class AuditLogController extends Controller
      */
     public function details($id)
     {
-        $log = DB::table('audit_logs')->where('id', $id)->first();
+        $log = DB::table('audit_logs')
+            ->where('id', $id)
+            ->first();
+
         if (! $log) {
-            return response()->json(['error' => 'Log not found'], 404);
+            return response()->json([
+                'error' => 'Log not found',
+            ], 404);
         }
 
         $exists = false;
         $data = null;
 
+        /**
+         * INCIDENT DETAILS
+         */
         if ($log->table_name === 'incidents') {
+
             $data = DB::table('incidents')
-                ->leftJoin('incident_categories', 'incidents.category_id', '=', 'incident_categories.id')
-                ->leftJoin('users as operators', 'incidents.assigned_to', '=', 'operators.id')
-                ->leftJoin('users as creators', 'incidents.reported_by', '=', 'creators.id')
+                ->leftJoin(
+                    'incident_categories',
+                    'incidents.category_id',
+                    '=',
+                    'incident_categories.id'
+                )
+                ->leftJoin(
+                    'users as operators',
+                    'incidents.assigned_to',
+                    '=',
+                    'operators.id'
+                )
+                ->leftJoin(
+                    'users as creators',
+                    'incidents.reported_by',
+                    '=',
+                    'creators.id'
+                )
                 ->select(
                     'incidents.*',
                     'incident_categories.name as category_name',
@@ -130,11 +154,97 @@ class AuditLogController extends Controller
                 ->first();
 
             if ($data) {
+
                 $exists = true;
+
             } else {
-                // Fallback to old/new values from audit log if deleted
-                $newVals = $log->new_values ? json_decode($log->new_values, true) : [];
-                $oldVals = $log->old_values ? json_decode($log->old_values, true) : [];
+
+                /**
+                 * FALLBACK FROM AUDIT LOG
+                 */
+                $newVals = $log->new_values
+                    ? json_decode($log->new_values, true)
+                    : [];
+
+                $oldVals = $log->old_values
+                    ? json_decode($log->old_values, true)
+                    : [];
+
+                $data = [
+
+                    'id' => $log->record_id,
+
+                    'title' => $newVals['title']
+                        ?? $oldVals['title']
+                        ?? 'Deleted Incident #'.$log->record_id,
+
+                    'description' => $newVals['description']
+                        ?? $oldVals['description']
+                        ?? 'No description stored in audit log.',
+
+                    'severity' => $newVals['severity']
+                        ?? $oldVals['severity']
+                        ?? 'N/A',
+
+                    'status' => $newVals['status']
+                        ?? $oldVals['status']
+                        ?? 'N/A',
+
+                    'created_at' => $newVals['created_at']
+                        ?? $oldVals['created_at']
+                        ?? null,
+
+                    'updated_at' => $newVals['updated_at']
+                        ?? $oldVals['updated_at']
+                        ?? null,
+
+                    'incident_date' => $newVals['incident_date']
+                        ?? $oldVals['incident_date']
+                        ?? null,
+
+                    'category_name' => $newVals['category_name']
+                        ?? $oldVals['category_name']
+                        ?? 'Uncategorized',
+
+                    'operator_name' => null,
+
+                    'creator_name' => null,
+
+                    'is_deleted' => true,
+
+                    'action' => $log->action,
+
+                    'old_values' => $oldVals,
+
+                    'new_values' => $newVals,
+                ];
+            }
+
+            /**
+             * CATEGORY DETAILS
+             */
+        } elseif ($log->table_name === 'incident_categories') {
+
+            $data = DB::table('incident_categories')
+                ->where('id', $log->record_id)
+                ->first();
+
+            if ($data) {
+
+                $exists = true;
+
+            } else {
+
+                /**
+                 * FALLBACK FROM AUDIT LOG
+                 */
+                $newVals = $log->new_values
+                    ? json_decode($log->new_values, true)
+                    : [];
+
+                $oldVals = $log->old_values
+                    ? json_decode($log->old_values, true)
+                    : [];
 
                 $data = [
 
@@ -153,28 +263,11 @@ class AuditLogController extends Controller
                         ?? null,
 
                     'is_deleted' => true,
-                    'action' => $log->action,
-                    'old_values' => $oldVals,
-                    'new_values' => $newVals,
-                ];
-            }
-        } elseif ($log->table_name === 'incident_categories') {
-            $data = DB::table('incident_categories')
-                ->where('id', $log->record_id)
-                ->first();
 
-            if ($data) {
-                $exists = true;
-            } else {
-                $newVals = $log->new_values ? json_decode($log->new_values, true) : [];
-                $oldVals = $log->old_values ? json_decode($log->old_values, true) : [];
-
-                $data = [
-                    'id' => $log->record_id,
-                    'name' => $newVals['name'] ?? $oldVals['name'] ?? 'Deleted Category #'.$log->record_id,
-                    'is_deleted' => true,
                     'action' => $log->action,
+
                     'old_values' => $oldVals,
+
                     'new_values' => $newVals,
                 ];
             }

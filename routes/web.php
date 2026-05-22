@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IncidentCategoryController;
 use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserManagementController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -81,19 +82,19 @@ Route::middleware(['auth'])->group(function () {
      * |--------------------------------------------------------------------------
      */
 
-    Route::get('/users', [\App\Http\Controllers\UserManagementController::class, 'index'])
+    Route::get('/users', [UserManagementController::class, 'index'])
         ->name('users.index');
-    Route::get('/users/create', [\App\Http\Controllers\UserManagementController::class, 'create'])
+    Route::get('/users/create', [UserManagementController::class, 'create'])
         ->name('users.create');
-    Route::post('/users', [\App\Http\Controllers\UserManagementController::class, 'store'])
+    Route::post('/users', [UserManagementController::class, 'store'])
         ->name('users.store');
-    Route::get('/users/{id}', [\App\Http\Controllers\UserManagementController::class, 'show'])
+    Route::get('/users/{id}', [UserManagementController::class, 'show'])
         ->name('users.show');
-    Route::get('/users/{id}/edit', [\App\Http\Controllers\UserManagementController::class, 'edit'])
+    Route::get('/users/{id}/edit', [UserManagementController::class, 'edit'])
         ->name('users.edit');
-    Route::put('/users/{id}', [\App\Http\Controllers\UserManagementController::class, 'update'])
+    Route::put('/users/{id}', [UserManagementController::class, 'update'])
         ->name('users.update');
-    Route::delete('/users/{id}', [\App\Http\Controllers\UserManagementController::class, 'destroy'])
+    Route::delete('/users/{id}', [UserManagementController::class, 'destroy'])
         ->name('users.destroy');
 
     /*

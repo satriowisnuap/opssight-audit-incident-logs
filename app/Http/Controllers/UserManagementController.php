@@ -23,8 +23,8 @@ class UserManagementController extends Controller
         if ($request->filled('search')) {
             $search = trim($request->search);
             $query->where(function ($q) use ($search) {
-                $q->where('users.name', 'ILIKE', '%' . $search . '%')
-                  ->orWhere('users.email', 'ILIKE', '%' . $search . '%');
+                $q->where('users.name', 'ILIKE', '%'.$search.'%')
+                    ->orWhere('users.email', 'ILIKE', '%'.$search.'%');
             });
         }
 
@@ -98,7 +98,7 @@ class UserManagementController extends Controller
 
         $user = DB::table('users')->where('id', $id)->first();
 
-        if (!$user) {
+        if (! $user) {
             abort(404);
         }
 
@@ -131,7 +131,7 @@ class UserManagementController extends Controller
 
         $user = DB::table('users')->where('id', $id)->first();
 
-        if (!$user) {
+        if (! $user) {
             abort(404);
         }
 
@@ -146,13 +146,13 @@ class UserManagementController extends Controller
 
         $user = DB::table('users')->where('id', $id)->first();
 
-        if (!$user) {
+        if (! $user) {
             abort(404);
         }
 
         $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $id],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$id],
             'role' => ['required', 'in:ADMIN,OPERATOR'],
         ];
 
@@ -226,7 +226,7 @@ class UserManagementController extends Controller
 
         $user = DB::table('users')->where('id', $id)->first();
 
-        if (!$user) {
+        if (! $user) {
             abort(404);
         }
 

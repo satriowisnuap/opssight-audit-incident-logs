@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\IncidentController;
+use App\Http\Controllers\IncidentCategoryController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,20 +36,32 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/opssight/dashboard', [DashboardController::class, 'index'])
         ->name('opssight.dashboard');
 
-    /*
+     /*
      * |--------------------------------------------------------------------------
      * | Incidents
      * |--------------------------------------------------------------------------
      */
 
-    Route::view('/incidents', 'pages.opssight.dashboard')
+    Route::get('/incidents', [IncidentController::class, 'index'])
         ->name('incidents.index');
 
-    Route::view('/incidents/create', 'pages.opssight.dashboard')
+    Route::get('/incidents/create', [IncidentController::class, 'create'])
         ->name('incidents.create');
 
-    Route::view('/incidents/{id}', 'pages.opssight.dashboard')
+    Route::post('/incidents', [IncidentController::class, 'store'])
+        ->name('incidents.store');
+
+    Route::get('/incidents/{id}', [IncidentController::class, 'show'])
         ->name('incidents.show');
+
+    Route::get('/incidents/{id}/edit', [IncidentController::class, 'edit'])
+        ->name('incidents.edit');
+
+    Route::put('/incidents/{id}', [IncidentController::class, 'update'])
+        ->name('incidents.update');
+
+    Route::delete('/incidents/{id}', [IncidentController::class, 'destroy'])
+        ->name('incidents.destroy');
 
     /*
      * |--------------------------------------------------------------------------

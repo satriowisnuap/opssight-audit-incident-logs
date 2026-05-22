@@ -38,7 +38,7 @@ class MenuHelper
             ],
             [
                 'icon' => 'user-profile',
-                'name' => 'Users',
+                'name' => 'Users Management',
                 'path' => '/users',
             ],
         ];

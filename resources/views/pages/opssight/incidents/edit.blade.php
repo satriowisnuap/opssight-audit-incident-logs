@@ -1,0 +1,168 @@
+@extends('layouts.app')
+
+@section('content')
+    <div class="mx-auto max-w-3xl">
+        {{-- Header --}}
+        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h2 class="text-title-md2 font-semibold text-gray-800 dark:text-white/90">
+                    Update Incident #{{ $incident->id ?? '000' }}
+                </h2>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    {{ \Illuminate\Support\Str::limit($incident->title ?? 'Incident Title', 60) }}
+                </p>
+            </div>
+            <a href="{{ route('incidents.show', $incident->id ?? 1) }}"
+                class="shadow-theme-xs inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
+                <svg class="h-4 w-4 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" />
+                </svg>
+                Cancel
+            </a>
+        </div>
+
+        {{-- Form Card --}}
+        <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+            <form action="{{ route('incidents.update', $incident->id ?? 1) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="p-6 md:p-8">
+                    <div class="grid grid-cols-1 gap-6">
+
+                        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                            {{-- Status --}}
+                            <div>
+                                <label class="mb-2.5 block text-sm font-medium text-gray-800 dark:text-white/90">
+                                    Status <span class="text-error-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <select name="status" required
+                                        class="focus:border-brand-500 focus:ring-brand-500/20 dark:focus:border-brand-500 w-full appearance-none rounded-lg border border-gray-300 bg-transparent py-3 pl-4 pr-10 text-sm outline-none transition focus:ring-4 dark:border-gray-700 dark:bg-gray-900 dark:text-white">
+                                        <option value="OPEN"
+                                            {{ old('status', $incident->status ?? '') == 'OPEN' ? 'selected' : '' }}>OPEN
+                                        </option>
+                                        <option value="IN_PROGRESS"
+                                            {{ old('status', $incident->status ?? '') == 'IN_PROGRESS' ? 'selected' : '' }}>
+                                            IN PROGRESS</option>
+                                        <option value="RESOLVED"
+                                            {{ old('status', $incident->status ?? '') == 'RESOLVED' ? 'selected' : '' }}>
+                                            RESOLVED</option>
+                                        <option value="CLOSED"
+                                            {{ old('status', $incident->status ?? '') == 'CLOSED' ? 'selected' : '' }}>
+                                            CLOSED</option>
+                                    </select>
+                                    <svg class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 fill-gray-500"
+                                        viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                    </svg>
+                                </div>
+                                @error('status')
+                                    <p class="text-error-500 mt-1 text-xs">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{-- Severity --}}
+                            <div>
+                                <label class="mb-2.5 block text-sm font-medium text-gray-800 dark:text-white/90">
+                                    Severity <span class="text-error-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <select name="severity" required
+                                        class="focus:border-brand-500 focus:ring-brand-500/20 dark:focus:border-brand-500 w-full appearance-none rounded-lg border border-gray-300 bg-transparent py-3 pl-4 pr-10 text-sm outline-none transition focus:ring-4 dark:border-gray-700 dark:bg-gray-900 dark:text-white">
+                                        <option value="CRITICAL"
+                                            {{ old('severity', $incident->severity ?? '') == 'CRITICAL' ? 'selected' : '' }}>
+                                            CRITICAL</option>
+                                        <option value="HIGH"
+                                            {{ old('severity', $incident->severity ?? '') == 'HIGH' ? 'selected' : '' }}>
+                                            HIGH</option>
+                                        <option value="MEDIUM"
+                                            {{ old('severity', $incident->severity ?? '') == 'MEDIUM' ? 'selected' : '' }}>
+                                            MEDIUM</option>
+                                        <option value="LOW"
+                                            {{ old('severity', $incident->severity ?? '') == 'LOW' ? 'selected' : '' }}>
+                                            LOW</option>
+                                    </select>
+                                    <svg class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 fill-gray-500"
+                                        viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                    </svg>
+                                </div>
+                                @error('severity')
+                                    <p class="text-error-500 mt-1 text-xs">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        {{-- Assigned Operator --}}
+                        <div>
+                            <label class="mb-2.5 block text-sm font-medium text-gray-800 dark:text-white/90">
+                                Assigned Operator
+                            </label>
+
+                            <div class="relative">
+                                <select name="assigned_to"
+                                    class="focus:border-brand-500 focus:ring-brand-500/20 dark:focus:border-brand-500 w-full appearance-none rounded-lg border border-gray-300 bg-transparent py-3 pl-4 pr-10 text-sm outline-none transition focus:ring-4 dark:border-gray-700 dark:bg-gray-900 dark:text-white">
+
+                                    <option value="">Unassigned</option>
+
+                                    @foreach ($operators ?? [] as $user)
+                                        <option value="{{ $user->id }}"
+                                            {{ old('assigned_to', $incident->assigned_to ?? '') == $user->id ? 'selected' : '' }}>
+
+                                            {{ $user->name }}
+
+                                        </option>
+                                    @endforeach
+
+                                </select>
+
+                                <svg class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 fill-gray-500"
+                                    viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+
+                                    <path fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                </svg>
+                            </div>
+
+                            @error('assigned_to')
+                                <p class="text-error-500 mt-1 text-xs">
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+                        {{-- Notes / Audit Log --}}
+                        <div>
+                            <label class="mb-2.5 block text-sm font-medium text-gray-800 dark:text-white/90">
+                                Update Notes <span class="font-normal text-gray-400">(Optional)</span>
+                            </label>
+                            <p class="mb-2.5 text-xs text-gray-500 dark:text-gray-400">
+                                Adding a note will create a new entry in the incident timeline.
+                            </p>
+                            <textarea name="notes" rows="4"
+                                placeholder="E.g., Investigated the database connection, applied hotfix..."
+                                class="focus:border-brand-500 focus:ring-brand-500/20 dark:focus:border-brand-500 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:ring-4 dark:border-gray-700 dark:bg-gray-900 dark:text-white">{{ old('notes') }}</textarea>
+                            @error('notes')
+                                <p class="text-error-500 mt-1 text-xs">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                    </div>
+                </div>
+
+                <div
+                    class="flex items-center justify-end gap-3 rounded-b-2xl border-t border-gray-100 bg-gray-50/50 px-6 py-4 dark:border-gray-800 dark:bg-gray-900/50">
+                    <button type="submit"
+                        class="bg-brand-500 shadow-theme-xs hover:bg-brand-600 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection

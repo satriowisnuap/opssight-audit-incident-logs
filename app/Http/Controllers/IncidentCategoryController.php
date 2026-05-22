@@ -30,19 +30,19 @@ class IncidentCategoryController extends Controller
                 'incident_categories.updated_at'
             );
 
-/**
- * SEARCH FILTER
- */
-if ($request->filled('search')) {
+        /**
+         * SEARCH FILTER
+         */
+        if ($request->filled('search')) {
 
-    $search = trim($request->search);
+            $search = trim($request->search);
 
-    $query->where(
-        'incident_categories.name',
-        'ILIKE',
-        '%' . $search . '%'
-    );
-}
+            $query->where(
+                'incident_categories.name',
+                'ILIKE',
+                '%'.$search.'%'
+            );
+        }
 
         /**
          * GET CATEGORIES (paginated)
@@ -77,29 +77,29 @@ if ($request->filled('search')) {
          * VALIDATION
          */
         $request->validate([
-            'name'        => 'required|string|max:100|unique:incident_categories,name',
+            'name' => 'required|string|max:100|unique:incident_categories,name',
         ]);
 
         /**
          * INSERT CATEGORY
          */
         $categoryId = DB::table('incident_categories')->insertGetId([
-            'name'        => trim($request->name),
-            'created_at'  => now(),
-            'updated_at'  => now(),
+            'name' => trim($request->name),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         /**
          * AUDIT LOG
          */
         DB::table('audit_logs')->insert([
-            'user_id'    => auth()->id(),
-            'action'     => 'CREATE_CATEGORY',
+            'user_id' => auth()->id(),
+            'action' => 'CREATE_CATEGORY',
             'table_name' => 'incident_categories',
-            'record_id'  => $categoryId,
+            'record_id' => $categoryId,
             'old_values' => null,
             'new_values' => json_encode([
-                'name'        => $request->name,
+                'name' => $request->name,
             ]),
             'ip_address' => $request->ip(),
             'created_at' => now(),
@@ -119,7 +119,7 @@ if ($request->filled('search')) {
             ->where('id', $id)
             ->first();
 
-        if (!$category) {
+        if (! $category) {
             abort(404);
         }
 
@@ -129,64 +129,68 @@ if ($request->filled('search')) {
         );
     }
 
-   /**
- * Update the specified category.
- */
-public function update(Request $request, $id)
-{
-    $category = DB::table('incident_categories')
-        ->where('id', $id)
-        ->first();
-
-    if (!$category) {
-        abort(404);
-    }
-
     /**
-     * VALIDATION
+     * Update the specified category.
      */
-    $request->validate([
-        'name' => 'required|string|max:100|unique:incident_categories,name,' . $id,
-    ]);
+    public function update(Request $request, $id)
+    {
+        $category = DB::table('incident_categories')
+            ->where('id', $id)
+            ->first();
 
-    /**
-     * OLD VALUES
-     */
-    $oldValues = [
-        'name' => $category->name,
-    ];
+        if (! $category) {
+            abort(404);
+        }
 
-    /**
-     * UPDATE CATEGORY
-     */
-    DB::table('incident_categories')
-        ->where('id', $id)
-        ->update([
-            'name'       => trim($request->name),
-            'updated_at' => now(),
+        /**
+         * VALIDATION
+         */
+        $request->validate([
+            'name' => 'required|string|max:100|unique:incident_categories,name,'.$id,
         ]);
 
-    /**
-     * AUDIT LOG
-     */
-    DB::table('audit_logs')->insert([
-        'user_id'    => auth()->id(),
-        'action'     => 'UPDATE_CATEGORY',
-        'table_name' => 'incident_categories',
-        'record_id'  => $id,
-        'old_values' => json_encode($oldValues),
-        'new_values' => json_encode([
-            'name' => $request->name,
-        ]),
+        /**
+         * OLD VALUES
+         */
+        $oldValues = [
+            'name' => $category->name,
+            'created_at' => $category->created_at,
+            'updated_at' => $category->updated_at,
+        ];
 
-        'ip_address' => $request->ip(),
-        'created_at' => now(),
-    ]);
+        /**
+         * UPDATE CATEGORY
+         */
+        DB::table('incident_categories')
+            ->where('id', $id)
+            ->update([
+                'name' => trim($request->name),
+                'updated_at' => now(),
+            ]);
 
-    return redirect()
-        ->route('categories.index')
-        ->with('success', 'Category updated successfully.');
-}
+        /**
+         * AUDIT LOG
+         */
+        DB::table('audit_logs')->insert([
+            'user_id' => auth()->id(),
+            'action' => 'UPDATE_CATEGORY',
+            'table_name' => 'incident_categories',
+            'record_id' => $id,
+            'old_values' => json_encode($oldValues),
+            'new_values' => json_encode([
+                'name' => trim($request->name),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]),
+
+            'ip_address' => $request->ip(),
+            'created_at' => now(),
+        ]);
+
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'Category updated successfully.');
+    }
 
     /**
      * Delete category — only if no incidents are using it.
@@ -197,7 +201,7 @@ public function update(Request $request, $id)
             ->where('id', $id)
             ->first();
 
-        if (!$category) {
+        if (! $category) {
             abort(404);
         }
 
@@ -228,12 +232,14 @@ public function update(Request $request, $id)
          * AUDIT LOG
          */
         DB::table('audit_logs')->insert([
-            'user_id'    => auth()->id(),
-            'action'     => 'DELETE_CATEGORY',
+            'user_id' => auth()->id(),
+            'action' => 'DELETE_CATEGORY',
             'table_name' => 'incident_categories',
-            'record_id'  => $id,
+            'record_id' => $id,
             'old_values' => json_encode([
-                'name'        => $category->name,
+                'name' => $category->name,
+                'created_at' => $category->created_at,
+                'updated_at' => $category->updated_at,
             ]),
             'new_values' => null,
             'ip_address' => $request->ip(),

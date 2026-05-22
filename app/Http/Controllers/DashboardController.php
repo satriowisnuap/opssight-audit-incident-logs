@@ -22,7 +22,7 @@ class DashboardController extends Controller
             $incidentQuery->where('category_id', $request->category);
         }
         if ($request->filled('search')) {
-            $incidentQuery->where('title', 'like', '%' . $request->search . '%');
+            $incidentQuery->where('title', 'like', '%'.$request->search.'%');
         }
         if ($request->filled('date_from') && $request->filled('date_to')) {
             $incidentQuery->whereBetween('incident_date', [$request->date_from, $request->date_to]);

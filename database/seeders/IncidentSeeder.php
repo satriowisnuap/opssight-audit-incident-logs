@@ -74,7 +74,7 @@ class IncidentSeeder extends Seeder
                 'resolved_at' => now()->subDay(),
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
+            ],
         ]);
     }
 }

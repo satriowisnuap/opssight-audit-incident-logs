@@ -65,12 +65,12 @@ class MenuHelper
         return [
             [
                 'title' => 'Menu',
-                'items' => self::getMainNavItems()
+                'items' => self::getMainNavItems(),
             ],
             [
                 'title' => 'Others',
-                'items' => self::getOthersItems()
-            ]
+                'items' => self::getOthersItems(),
+            ],
         ];
     }
 

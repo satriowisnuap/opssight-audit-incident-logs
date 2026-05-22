@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
                 'role' => 'OPERATOR',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
+            ],
         ]);
     }
 }

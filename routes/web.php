@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\IncidentCategoryController;
-
+use App\Http\Controllers\IncidentController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,11 +36,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/opssight/dashboard', [DashboardController::class, 'index'])
         ->name('opssight.dashboard');
 
-     /*
-     * |--------------------------------------------------------------------------
-     * | Incidents
-     * |--------------------------------------------------------------------------
-     */
+    /*
+    * |--------------------------------------------------------------------------
+    * | Incidents
+    * |--------------------------------------------------------------------------
+    */
 
     Route::get('/incidents', [IncidentController::class, 'index'])
         ->name('incidents.index');
@@ -69,8 +69,11 @@ Route::middleware(['auth'])->group(function () {
      * |--------------------------------------------------------------------------
      */
 
-    Route::view('/audit-logs', 'pages.opssight.dashboard')
+    Route::get('/audit-logs', [AuditLogController::class, 'index'])
         ->name('audit-logs.index');
+
+    Route::get('/audit-logs/{id}/details', [AuditLogController::class, 'details'])
+        ->name('audit-logs.details');
 
     /*
      * |--------------------------------------------------------------------------
@@ -127,4 +130,4 @@ Route::middleware(['auth'])->group(function () {
  * |--------------------------------------------------------------------------
  */
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

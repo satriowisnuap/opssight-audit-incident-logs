@@ -34,7 +34,7 @@ class IncidentCategorySeeder extends Seeder
                 'name' => 'Database',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
+            ],
         ]);
     }
 }

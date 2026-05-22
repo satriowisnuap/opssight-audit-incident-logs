@@ -17,7 +17,7 @@ class AuditLogSeeder extends Seeder
                 'record_id' => 1,
                 'old_values' => null,
                 'new_values' => json_encode([
-                    'title' => 'Primary Database Connection Failure'
+                    'title' => 'Primary Database Connection Failure',
                 ]),
                 'ip_address' => '127.0.0.1',
                 'created_at' => now(),
@@ -28,10 +28,10 @@ class AuditLogSeeder extends Seeder
                 'table_name' => 'incidents',
                 'record_id' => 2,
                 'old_values' => json_encode([
-                    'status' => 'OPEN'
+                    'status' => 'OPEN',
                 ]),
                 'new_values' => json_encode([
-                    'status' => 'IN_PROGRESS'
+                    'status' => 'IN_PROGRESS',
                 ]),
                 'ip_address' => '127.0.0.1',
                 'created_at' => now(),
@@ -42,12 +42,12 @@ class AuditLogSeeder extends Seeder
                 'table_name' => 'incidents',
                 'record_id' => 5,
                 'old_values' => json_encode([
-                    'title' => 'Server CPU Spike'
+                    'title' => 'Server CPU Spike',
                 ]),
                 'new_values' => null,
                 'ip_address' => '127.0.0.1',
                 'created_at' => now(),
-            ]
+            ],
         ]);
     }
 }

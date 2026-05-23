@@ -1,3 +1,7 @@
+@php
+    $title = 'Login';
+@endphp
+
 @extends('layouts.fullscreen-layout')
 
 @section('content')

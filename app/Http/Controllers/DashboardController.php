@@ -97,7 +97,10 @@ class DashboardController extends Controller
         // For filter dropdowns
         $categories = DB::table('incident_categories')->select('id', 'name')->get();
 
+        $title = 'Dashboard';
+
         return view('pages.opssight.dashboard', compact(
+            'title',
             'totalIncidents',
             'openIncidents',
             'criticalIncidents',

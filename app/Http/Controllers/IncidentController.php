@@ -106,6 +106,7 @@ class IncidentController extends Controller
         return view(
             'pages.opssight.incidents.index',
             [
+                'title' => 'Incidents',
                 'incidents' => $incidents,
                 'categories' => $categories,
             ]
@@ -129,6 +130,7 @@ class IncidentController extends Controller
         return view(
             'pages.opssight.incidents.create',
             [
+                'title' => 'Create Incident',
                 'categories' => $categories,
                 'operators' => $operators,
             ]
@@ -278,6 +280,7 @@ class IncidentController extends Controller
         return view(
             'pages.opssight.incidents.show',
             [
+                'title' => 'Incident Details',
                 'incident' => $incident,
                 'logs' => $logs,
             ]
@@ -314,6 +317,7 @@ class IncidentController extends Controller
         return view(
             'pages.opssight.incidents.edit',
             [
+                'title' => 'Edit Incident',
                 'incident' => $incident,
                 'categories' => $categories,
                 'operators' => $operators,

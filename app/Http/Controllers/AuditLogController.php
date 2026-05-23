@@ -98,6 +98,7 @@ class AuditLogController extends Controller
             ->get();
 
         return view('pages.opssight.audit-logs.index', [
+            'title' => 'Audit Logs',
             'logs' => $logs,
             'actions' => $actions,
             'tables' => $tables,

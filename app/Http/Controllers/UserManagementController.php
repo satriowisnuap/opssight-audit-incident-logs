@@ -37,6 +37,7 @@ class UserManagementController extends Controller
             ->withQueryString();
 
         return view('pages.opssight.user-management.index', [
+            'title' => 'User Management',
             'users' => $users,
         ]);
     }
@@ -47,7 +48,9 @@ class UserManagementController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        return view('pages.opssight.user-management.create');
+        return view('pages.opssight.user-management.create', [
+            'title' => 'Create User',
+        ]);
     }
 
     public function store(Request $request)
@@ -115,6 +118,7 @@ class UserManagementController extends Controller
             ->get();
 
         return view('pages.opssight.user-management.show', [
+            'title' => 'User Details',
             'user' => $user,
             'totalAssigned' => $totalAssigned,
             'openIncidents' => $openIncidents,
@@ -135,7 +139,10 @@ class UserManagementController extends Controller
             abort(404);
         }
 
-        return view('pages.opssight.user-management.edit', ['user' => $user]);
+        return view('pages.opssight.user-management.edit', [
+            'title' => 'Edit User',
+            'user' => $user,
+        ]);
     }
 
     public function update(Request $request, $id)

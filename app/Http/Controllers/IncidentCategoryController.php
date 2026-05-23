@@ -59,6 +59,7 @@ class IncidentCategoryController extends Controller
         return view(
             'pages.opssight.categories.index',
             [
+                'title' => 'Categories',
                 'categories' => $categories,
             ]
         );
@@ -73,7 +74,12 @@ class IncidentCategoryController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        return view('pages.opssight.categories.create');
+        return view(
+            'pages.opssight.categories.create',
+            [
+                'title' => 'Create Category',
+            ]
+        );
     }
 
     /**
@@ -141,7 +147,10 @@ class IncidentCategoryController extends Controller
 
         return view(
             'pages.opssight.categories.edit',
-            ['category' => $category]
+            [
+                'title' => 'Edit Category',
+                'category' => $category,
+            ]
         );
     }
 

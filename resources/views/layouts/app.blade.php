@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? 'Dashboard' }} | TailAdmin - Laravel Tailwind CSS Admin Dashboard Template</title>
+    <title>{{ $title ?? 'Dashboard' }} | Audit and Incident Logs</title>
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -90,11 +90,11 @@
             }
         })();
     </script>
-    
+
 </head>
 
 <body
-    x-data="{ 'loaded': true}"
+    x-data="{ 'loaded': true }"
     x-init="$store.sidebar.isExpanded = window.innerWidth >= 1280;
     const checkMobile = () => {
         if (window.innerWidth < 1280) {
@@ -108,7 +108,7 @@
     window.addEventListener('resize', checkMobile);">
 
     {{-- preloader --}}
-    <x-common.preloader/>
+    <x-common.preloader />
     {{-- preloader end --}}
 
     <div class="min-h-screen xl:flex">
@@ -124,7 +124,7 @@
             <!-- app header start -->
             @include('layouts.app-header')
             <!-- app header end -->
-            <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+            <div class="max-w-(--breakpoint-2xl) mx-auto p-4 md:p-6">
                 @yield('content')
             </div>
         </div>

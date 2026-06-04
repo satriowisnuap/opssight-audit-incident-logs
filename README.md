@@ -1,6 +1,6 @@
 # OpsSight — Incident & Audit Log Management System
 
-OpsSight adalah sistem manajemen insiden operasional dan audit trail berbasis web yang dikembangkan menggunakan **Laravel 11**, **TailAdmin (Tailwind CSS)**, dan **Alpine.js**. Sistem ini dirancang untuk memenuhi kebutuhan tim operasional **Greenfields Indonesia** dalam mengelola, memantau, dan mendokumentasikan insiden operasional secara terstruktur dan terpusat.
+OpsSight adalah sistem manajemen insiden operasional dan audit trail berbasis web yang dikembangkan menggunakan **Laravel 11**, **TailAdmin (Tailwind CSS)**, dan **Alpine.js**. Sistem ini dirancang untuk memenuhi kebutuhan tim operasional **Perusahaan** dalam mengelola, memantau, dan mendokumentasikan insiden operasional secara terstruktur dan terpusat.
 
 ---
 
